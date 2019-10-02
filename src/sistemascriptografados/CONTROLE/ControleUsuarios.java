@@ -1,5 +1,7 @@
 package sistemascriptografados.CONTROLE;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import sistemascriptografados.MODELO.Usuarios;
 import sistemascriptografados.DAO.UsuariosDAO;
 import java.sql.ResultSet;
@@ -43,7 +45,7 @@ public class ControleUsuarios {
         return validador;
     }
 
-    public int verificarSenha(String senhaEntrada) throws SQLException, ClassNotFoundException {
+    public int verificarSenha(String senhaEntrada) throws SQLException, ClassNotFoundException, NoSuchAlgorithmException, UnsupportedEncodingException {
         //  UsuariosDAO usuarioDAO = new UsuariosDAO();
         if (usuario.validaSenha(senhaEntrada) == 0) {
             if (usuarioDAO.verificarSenha(senhaEntrada) == true) {
@@ -53,7 +55,7 @@ public class ControleUsuarios {
         return 4;
     }
 
-    public int concederLogin(String login, String Senha) throws SQLException, ClassNotFoundException {
+    public int concederLogin(String login, String Senha) throws SQLException, ClassNotFoundException, NoSuchAlgorithmException, UnsupportedEncodingException {
         int veriSenha, veriLogin;
         veriLogin = verificarLogin(login);
         if (veriLogin == 0) {
@@ -68,7 +70,7 @@ public class ControleUsuarios {
         }
     }
 
-    public int cadastrarUsuarios(String nome, String sobrenome, String email, String login, String senha) throws SQLException, ClassNotFoundException {
+    public int cadastrarUsuarios(String nome, String sobrenome, String email, String login, String senha) throws SQLException, ClassNotFoundException, NoSuchAlgorithmException, UnsupportedEncodingException {
         Usuarios usuario = new Usuarios();
         UsuariosDAO usuariosDAO = new UsuariosDAO();
         int motivoInvalido;

@@ -1,5 +1,8 @@
 package sistemascriptografados.DAO;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import sistemascriptografados.MODELO.Usuarios;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,14 +25,22 @@ public class UsuariosDAO {
         bd = new ConexaoDAO();
     }
 
-    public int inserirNovoUsuario(Usuarios usuario) throws SQLException, ClassNotFoundException {
+    public int inserirNovoUsuario(Usuarios usuario) throws SQLException, ClassNotFoundException, NoSuchAlgorithmException, UnsupportedEncodingException {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte messageDigest[] = md.digest(usuario.getSenha().getBytes("UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        for(byte b : messageDigest){
+            sb.append(String.format("%02X", 0xFF & b));
+        }
+        String senhaCriptografada = sb.toString();
+        
         sql = "insert into tab_usuarios (ID_USR, NOME_USR,SOBRENOME_USR, EMAIL_USR, LOGIN_USR, SENHA_USR) values (usuariosID.nextval,upper(?),upper(?), upper(?), upper(?), ?)";
         statement = new ConexaoDAO().con.prepareStatement(sql);
         statement.setString(1, usuario.getNome());
         statement.setString(2, usuario.getSobrenome());
         statement.setString(3, usuario.getEmail());
         statement.setString(4, usuario.getLogin());
-        statement.setString(5, usuario.getSenha());
+        statement.setString(5, senhaCriptografada);
         try {
             statement.execute();
             resultSet = statement.getResultSet();
@@ -53,10 +64,17 @@ public class UsuariosDAO {
         return 3;
     }
 
-    public boolean verificarSenha(String senhaEntrada) throws SQLException, ClassNotFoundException {
+    public boolean verificarSenha(String senhaEntrada) throws SQLException, ClassNotFoundException, NoSuchAlgorithmException, UnsupportedEncodingException {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte messageDigest[] = md.digest(senhaEntrada.getBytes("UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        for(byte b : messageDigest){
+            sb.append(String.format("%02X", 0xFF & b));
+        }
+        String senhaCriptografada = sb.toString();
         sql = "Select LOGIN_USR from tab_usuarios where SENHA_USR = ? ";
         statement = new ConexaoDAO().con.prepareStatement(sql);
-        statement.setString(1, senhaEntrada);
+        statement.setString(1, senhaCriptografada);
         statement.executeQuery();
         ResultSet rs = statement.getResultSet();
         while (rs.next()) {
