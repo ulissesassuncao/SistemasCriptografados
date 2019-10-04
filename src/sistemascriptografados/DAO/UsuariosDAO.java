@@ -1,12 +1,19 @@
 package sistemascriptografados.DAO;
 
 import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import sistemascriptografados.MODELO.Usuarios;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 import javax.swing.JOptionPane;
 
 /**
@@ -25,18 +32,18 @@ public class UsuariosDAO {
         bd = new ConexaoDAO();
     }
 
-    public int inserirNovoUsuario(Usuarios usuario) throws SQLException, ClassNotFoundException, NoSuchAlgorithmException, UnsupportedEncodingException {
+    public int inserirNovoUsuario(Usuarios usuario) throws SQLException, ClassNotFoundException, NoSuchAlgorithmException, UnsupportedEncodingException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte messageDigest[] = md.digest(usuario.getSenha().getBytes("UTF-8"));
         StringBuilder sb = new StringBuilder();
-        for(byte b : messageDigest){
+        for (byte b : messageDigest) {
             sb.append(String.format("%02X", 0xFF & b));
         }
         String senhaCriptografada = sb.toString();
-        
-        sql = "insert into tab_usuarios (ID_USR, NOME_USR,SOBRENOME_USR, EMAIL_USR, LOGIN_USR, SENHA_USR) values (usuariosID.nextval,upper(?),upper(?), upper(?), upper(?), ?)";
+
+        sql = "insert into tab_usuarios (ID_USR, NOME_USR,SOBRENOME_USR, EMAIL_USR, LOGIN_USR, SENHA_USR) values (usuariosID.nextval,?,upper(?), upper(?), upper(?), ?)";
         statement = new ConexaoDAO().con.prepareStatement(sql);
-        statement.setString(1, usuario.getNome());
+        statement.setString(1, criptografar(usuario.getNome()));
         statement.setString(2, usuario.getSobrenome());
         statement.setString(3, usuario.getEmail());
         statement.setString(4, usuario.getLogin());
@@ -68,7 +75,7 @@ public class UsuariosDAO {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte messageDigest[] = md.digest(senhaEntrada.getBytes("UTF-8"));
         StringBuilder sb = new StringBuilder();
-        for(byte b : messageDigest){
+        for (byte b : messageDigest) {
             sb.append(String.format("%02X", 0xFF & b));
         }
         String senhaCriptografada = sb.toString();
@@ -92,7 +99,7 @@ public class UsuariosDAO {
         while (rs.next()) {
             String nomeUsuAtual = rs.getString(1);
             String sobreNomeUsuAtual = rs.getString(2);
-            return (nomeUsuAtual + ' ' + sobreNomeUsuAtual);
+            return (nomeUsuAtual);
         }
         return null;
     }
@@ -117,6 +124,22 @@ public class UsuariosDAO {
             return rs.getInt(1);
         }
         return 1;
+    }
+
+    public String criptografar(String txt) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        int contador, tamanho, codigoASCII;
+        String senhaCriptografada = "";
+        tamanho = txt.length();
+       // txt = txt.toUpperCase();
+        contador = 0;
+
+        while (contador < tamanho) {
+            codigoASCII = txt.charAt(contador) + 130;
+            senhaCriptografada = senhaCriptografada + (char) codigoASCII;
+            contador++;
+        }
+
+        return senhaCriptografada;
     }
 
 }

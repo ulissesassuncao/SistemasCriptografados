@@ -1,6 +1,7 @@
 package sistemascriptografados.CONTROLE;
 
 import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import sistemascriptografados.MODELO.Usuarios;
 import sistemascriptografados.DAO.UsuariosDAO;
@@ -8,6 +9,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 /**
  *
@@ -70,7 +74,7 @@ public class ControleUsuarios {
         }
     }
 
-    public int cadastrarUsuarios(String nome, String sobrenome, String email, String login, String senha) throws SQLException, ClassNotFoundException, NoSuchAlgorithmException, UnsupportedEncodingException {
+    public int cadastrarUsuarios(String nome, String sobrenome, String email, String login, String senha) throws SQLException, ClassNotFoundException, NoSuchAlgorithmException, UnsupportedEncodingException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         Usuarios usuario = new Usuarios();
         UsuariosDAO usuariosDAO = new UsuariosDAO();
         int motivoInvalido;

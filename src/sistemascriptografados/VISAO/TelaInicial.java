@@ -1,22 +1,49 @@
 package sistemascriptografados.VISAO;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import sistemascriptografados.CONTROLE.ControleUsuarios;
 import java.sql.SQLException;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 
 /**
  *
  * @author 6
  */
 public final class TelaInicial extends javax.swing.JFrame {
+
     String log;
+
     /**
      * Creates new form TelaInicial
      */
-    public TelaInicial(String login) throws SQLException, ClassNotFoundException {
+    public TelaInicial(String login) throws SQLException, ClassNotFoundException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException {
         log = login;
         initComponents();
         ControleUsuarios controleUsuario = new ControleUsuarios();
-        lblIdentUsu.setText("Seja Bem vindo (a), " + controleUsuario.pegaNome(login));
+        String a = descriptografar(controleUsuario.pegaNome(login));
+        lblIdentUsu.setText("Seja Bem vindo (a), " + descriptografar(controleUsuario.pegaNome(login)));
+    }
+
+    public String descriptografar(String txt) throws NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException {
+        int contador, tamanho, codigoASCII;
+        String senhaCriptografada = "";
+        tamanho = txt.length();
+       // txt = txt.toUpperCase();
+        contador = 0;
+
+        while (contador < tamanho) {
+            codigoASCII = txt.charAt(contador) - 130;
+            senhaCriptografada = senhaCriptografada + (char) codigoASCII;
+            contador++;
+        }
+
+        return senhaCriptografada;
     }
 
     TelaInicial() {
@@ -108,7 +135,7 @@ public final class TelaInicial extends javax.swing.JFrame {
         });
     }
 
-   
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JFrame jFrame1;
     private javax.swing.JMenu jMenu1;
