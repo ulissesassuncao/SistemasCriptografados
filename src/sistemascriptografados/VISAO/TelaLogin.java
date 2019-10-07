@@ -247,9 +247,10 @@ public class TelaLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_txtLoginActionPerformed
 
     private void btnLogarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogarActionPerformed
-        ControleUsuarios controleUsuarios = new ControleUsuarios();
+
         int verificaConc = 0;
         try {
+            ControleUsuarios controleUsuarios = new ControleUsuarios();
             verificaConc = controleUsuarios.concederLogin(txtLogin.getText(), txtSenha.getText());
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(TelaLogin.class.getName()).log(Level.SEVERE, null, ex);
@@ -259,26 +260,7 @@ public class TelaLogin extends javax.swing.JFrame {
             Logger.getLogger(TelaLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (verificaConc == 0) {
-            TelaInicial t1 = null;
-            try {
-                t1 = new TelaInicial(txtLogin.getText());
-            } catch (SQLException ex) {
-                Logger.getLogger(TelaLogin.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(TelaLogin.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NoSuchAlgorithmException ex) {
-                Logger.getLogger(TelaLogin.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvalidKeyException ex) {
-                Logger.getLogger(TelaLogin.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalBlockSizeException ex) {
-                Logger.getLogger(TelaLogin.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (BadPaddingException ex) {
-                Logger.getLogger(TelaLogin.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NoSuchPaddingException ex) {
-                Logger.getLogger(TelaLogin.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            t1.setVisible(true);
-            dispose();
+            System.out.println("=======================================================\n");
         } else {
             cnfCadastro.setText(motivoNegacao(verificaConc));
         }
@@ -296,7 +278,7 @@ public class TelaLogin extends javax.swing.JFrame {
             return null;
         }
     }
-    
+
     public static void main(String args[]) throws SQLException, ClassNotFoundException {
         Usuarios a1 = new Usuarios();
 
@@ -309,7 +291,7 @@ public class TelaLogin extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-                    
+
                 }
             }
         } catch (ClassNotFoundException ex) {

@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -183,8 +184,9 @@ public class TelaCadastro extends javax.swing.JFrame {
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
         int validaCadastro = 0;
         String motivo = null;
-        ControleUsuarios controleUsuarios = new ControleUsuarios();
+
         try {
+            ControleUsuarios controleUsuarios = new ControleUsuarios();
             validaCadastro = controleUsuarios.cadastrarUsuarios(txtNovoNome.getText(), txtNovoSobrenome.getText(), txtNovoEmail.getText(), txtNovoLogin.getText(), txtNovaSenha.getText());
         } catch (SQLException ex) {
             Logger.getLogger(TelaCadastro.class.getName()).log(Level.SEVERE, null, ex);
@@ -218,6 +220,7 @@ public class TelaCadastro extends javax.swing.JFrame {
         } else if (validaCadastro == 8) {
             motivo = "Registro nao pode ser inserido";
         } else if (validaCadastro == 7) {
+            JOptionPane.showMessageDialog(null, "Registro inserido com sucesso!");
             motivo = "Sucesso";
             TelaLogin t2 = new TelaLogin();
             t2.setVisible(true);

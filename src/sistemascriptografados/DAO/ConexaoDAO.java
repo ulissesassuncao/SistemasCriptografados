@@ -20,7 +20,7 @@ public class ConexaoDAO {
    public ConexaoDAO() throws SQLException, ClassNotFoundException {
         try {
             Class.forName(driver);
-            System.out.println("Conectado...");
+            //System.out.println("Conectado...");
         }catch(Exception e){
             System.out.println("Driver nao encontrado");
         }

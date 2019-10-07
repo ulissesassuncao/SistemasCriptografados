@@ -80,7 +80,7 @@ public class Usuarios implements Serializable {
      5 - login ja existe
      6 - senha*/
 
-    public int validaDadosCadastro(Usuarios usuario, UsuariosDAO usuarioDAO) throws SQLException, ClassNotFoundException {
+    public int validaDadosCadastro(Usuarios usuario) throws SQLException, ClassNotFoundException {
         if (usuario.nome.length() <= 0) {
             return 1;
         } else if (usuario.sobrenome.length() <= 0) {
@@ -89,8 +89,6 @@ public class Usuarios implements Serializable {
             return 3;
         } else if (usuario.login.length() <= 0) {
             return 4;
-        } else if (usuarioDAO.existeLogin(usuario.login) == 0) {
-            return 5;
         } else if (usuario.senha.length() <= 0) {
             return 6;
         } else {
